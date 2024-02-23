@@ -1,16 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const paperController = require("./../controllers/paperController");
+const productController = require("./../controllers/productController");
 
-// providing the route once(since all requests goto the same route)
-// and then chaining different requests together.
 router
   .route("/")
-  .get(getAllEmployees)
-  .post(createNewEmployee)
-  .put(updateEmployee)
-  .delete(deleteEmployee);
+  .get(productController.getAllProducts)
+  .post(productController.createNewProduct)
+  .put(productController.updateProduct);
 
-router.route("/:id").get(getEmployee);
+router.route("/:id").get(productController.getProduct);
+router
+  .route("/category/:categoryID")
+  .get(productController.getProductByCategory);
+router.route("/subcategory/:subcategory").get(productController.getProduct);
 
 module.exports = router;

@@ -16,7 +16,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 
 app.use("/", require("./routes/root"));
-// app.use("/products", require("./routes/productRoutes"));
+app.use("/products", require("./routes/productRoutes"));
+app.use("/user", require("./routes/userRoutes"));
+app.use("/category", require("./routes/categoryRoutes"));
 
 app.all("*", (req, res) => {
   res.status(404);
