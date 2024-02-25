@@ -14,20 +14,11 @@ const getProduct = asyncHandler(async (req, res) => {
 
 //?
 const getAllProducts = asyncHandler(async (req, res) => {
-  //TODO pagination
-  const products = await Product.find().select("name variants images").lean();
-  if (!products?.length) {
-    return res.status(400).json({ message: "No Products Found" });
-  }
-  res.json(products);
-});
+  const page = parseInt(req.query.page, 10) || 0;
 
-//?
-const getProductByCategory = asyncHandler(async (req, res) => {
-  if (!req?.params?.categoryID)
-    return res.status(400).json({ message: "Category ID Missing" });
-  //TODO pagination
-  const products = await Product.find({ category: req.params.category })
+  const products = await Product.find()
+    .skip(page * 6)
+    .limit(6)
     .select("name variants images")
     .lean();
   if (!products?.length) {
@@ -38,12 +29,15 @@ const getProductByCategory = asyncHandler(async (req, res) => {
 
 //?
 const getProductBySubCategory = asyncHandler(async (req, res) => {
-  if (!req?.params?.subcategory)
+  const page = parseInt(req.query.page, 10) || 0;
+
+  if (!req?.params?.sub)
     return res.status(400).json({ message: "subcategory Missing" });
-  //TODO pagination
   const products = await Product.find({
-    subCategory: req.params.subcategory,
+    subCategory: req.params.sub,
   })
+    .skip(page * 6)
+    .limit(6)
     .select("name variants images")
     .lean();
   if (!products?.length) {
@@ -54,17 +48,16 @@ const getProductBySubCategory = asyncHandler(async (req, res) => {
 
 //?
 const createNewProduct = asyncHandler(async (req, res) => {
-  const { name, description, variants, category, subcategory, images } =
-    req.body;
+  console.log("new product");
+  const { name, description, variants, subCategory } = req.body;
 
   // Confirm Data
   if (
     !name ||
     !variants ||
     !description ||
-    !category ||
-    !subcategory ||
-    !images
+    !subCategory
+    // || !images
   ) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -74,9 +67,7 @@ const createNewProduct = asyncHandler(async (req, res) => {
     name,
     description,
     variants,
-    category,
-    subcategory,
-    images,
+    subCategory,
   });
 
   if (success) {
@@ -88,8 +79,7 @@ const createNewProduct = asyncHandler(async (req, res) => {
 
 //?
 const updateProduct = asyncHandler(async (req, res) => {
-  const { id, name, description, variants, category, subcategory, images } =
-    req.body;
+  const { id, name, description, variants, subCategory } = req.body;
 
   // Confirm Data
   if (
@@ -97,9 +87,8 @@ const updateProduct = asyncHandler(async (req, res) => {
     !name ||
     !variants ||
     !description ||
-    !category ||
-    !subcategory ||
-    !images
+    !subCategory
+    // || !images
   ) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -114,8 +103,7 @@ const updateProduct = asyncHandler(async (req, res) => {
   product.name = name;
   product.description = description;
   product.variants = variants;
-  product.category = category;
-  product.subcategory = subcategory;
+  product.subCategory = subCategory;
   product.images = images;
 
   await product.save();
@@ -126,7 +114,6 @@ const updateProduct = asyncHandler(async (req, res) => {
 module.exports = {
   getProduct,
   getAllProducts,
-  getProductByCategory,
   getProductBySubCategory,
   createNewProduct,
   updateProduct,

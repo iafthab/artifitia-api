@@ -1,6 +1,27 @@
-# 4.2
-Restful API with Express JS
+# Artifitia API
 
-Updated repo 4.1 with ExpressJS.  
-Then made it an restful API.  
-// different commits
+## Setting Up
+
+clone repository
+
+```bash
+  git clone https://github.com/iafthab/artifitia-api.git
+```
+
+Install dependencies
+
+```bash
+  npm i
+```
+
+ADD Database URI in .env file
+
+```javascript
+DATABASE_URI = mongodb+srv://username:password@cluster0.abc0123.mongodb.net/artifitia?retryWrites=true&w=majority
+```
+
+start server
+
+```bash
+  npm run dev
+```

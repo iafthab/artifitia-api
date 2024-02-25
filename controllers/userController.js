@@ -2,9 +2,6 @@ const User = require("./../model/User");
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 
-// @desc Auth Login
-// @route POST /auth/login/student
-// @access Public
 const signIn = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
@@ -21,15 +18,11 @@ const signIn = asyncHandler(async (req, res) => {
   if (!match) return res.status(401).json({ message: "Incorrect Password" });
   else {
     res.status(200).json({
-      _id: user.id,
       name: user.name,
     });
   }
 });
 
-// @desc Auth Login
-// @route POST /auth/login/student
-// @access Public
 const signUp = asyncHandler(async (req, res) => {
   const { email, name, password } = req.body;
 

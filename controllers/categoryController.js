@@ -17,6 +17,12 @@ const createCategory = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Category Name is missing" });
   }
 
+  const duplicate = Category.find(name).lean();
+
+  if (!duplicate) {
+    return res.status(409).json({ message: "Category Already Exists" });
+  }
+
   // Create and Store New category
   const success = await Category.create({
     name,
@@ -43,19 +49,22 @@ const createSubCategory = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Category not found" });
   }
   // checking if the subcategory already exists.
-  const subcategory = category.subCategory.filter((sub) => sub === subCategory);
-  if (subcategory) {
+  const subcategory = category.subCategory?.filter(
+    (sub) => sub === subCategory
+  );
+
+  if (subcategory.length) {
     return res.status(409).json({ message: "SubCategory already exists" });
   }
 
-  category.subCategory.push(subCategory);
+  category.subCategory?.push(subCategory);
 
-  await category.save();
+  const success = await category.save();
 
-  if (save) {
-    res.json({ message: "Sub Category Added" });
+  if (success) {
+    res.status(201).json({ message: "Sub Category Added" });
   } else {
-    res.json({ message: "Failed to add Sub Category" });
+    res.status(400).json({ message: "Failed to add Sub Category" });
   }
 });
 

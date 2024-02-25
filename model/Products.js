@@ -13,29 +13,24 @@ const productsSchema = new mongoose.Schema({
     {
       ram: {
         type: String,
-        required: true,
+        // required: true,
       },
       price: {
         type: String,
-        required: true,
+        // required: true,
       },
-      quantity: {
-        type: String,
-        required: true,
+      qty: {
+        type: Number,
+        // required: true,
       },
     },
   ],
-  category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
-  },
-  sub_category: {
+  subCategory: {
     type: String,
     required: true,
   },
   images: {
     type: String,
-    required: true,
   },
 });
 
